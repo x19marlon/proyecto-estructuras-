@@ -25,6 +25,7 @@ public:
     Comando(std::string tipoAnalisis, std::string objeto, std::string comentario);
     //Tipo de comando
     std::string getTipoComando();
+    void setTipoComando(std::string tipoComando);
     //Getters
     std::string getTipoMovimiento();
     double getMagnitud();

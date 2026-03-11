@@ -9,8 +9,8 @@ private:
     std::string tipoElemento; //roca, crater, monticulo, duna
     double tamano;
     std::string unidadMedida;
-    double coordenadaX;
-    double coordenadaY;
+    double posX;
+    double posY;
 
 public:
     //Constructores
