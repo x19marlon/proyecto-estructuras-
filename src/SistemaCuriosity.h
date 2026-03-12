@@ -15,6 +15,14 @@ private:
     std::vector<Elemento> listaElementos;
 
 public:
+    //Constructor
+    SistemaCuriosity();
+    //Setters
+    void setColaComandos(std::queue<Comando> cola);
+    void setListaElementos(std::vector<Elemento> lista);
+    //Getters
+    std::queue<Comando> getColaComandos();
+    std::vector<Elemento> getListaElementos();
     //Operaciones para cargar informacion
     void cargarComandos(std::string nombreArchivo);
     void cargarElementos(std::string nombreArchivo);
