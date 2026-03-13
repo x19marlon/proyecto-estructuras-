@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <fstream>
+#include <sstream>
+
 //Archivos de definicion 
 #include "Comando.h"
 #include "Elemento.h"

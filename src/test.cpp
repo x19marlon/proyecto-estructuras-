@@ -36,10 +36,19 @@ int main(int argc, char* argv[]){
         agregarAnalisis(curiosity, argv, argc);
     } else if (arg == "agregar_elemento"){
         agregarElemento(curiosity, argv);
-    } else if (arg == "guardar"){
-        
+    } else if (arg == "guardar"){ // guardar el tipo de archivo y nombre de archivo
+        std::string tipoArchivo = argv[2];
+        std::string nombreArchivo = argv[3];
+        curiosity.guardar(tipoArchivo, nombreArchivo);
     } else if (arg == "simular_comandos"){
-        
+        double coordX, coordY;
+        try { //string to double, usar try y catch para evitar errores por el tipo de dato
+            coordX = std::stod(argv[2]); 
+            coordY = std::stod(argv[3]);
+        } catch (const std::invalid_argument& e) {
+            std::cout<<"Las coordenadas deben ser numeros validos.\n";
+        }
+        curiosity.simularComandos(coordX, coordY);
     } else if (arg == "salir"){
         exit (0);
     } else{
