@@ -195,7 +195,70 @@ void SistemaCuriosity::agregarElemento(std::string tipoElemento, double tam, std
 
 //Guardar la informacion en un archivo
 void SistemaCuriosity::guardar(std::string tipoArchivo, std::string nombreArchivo){
+    
+    if (tipoArchivo == "comandos"){
 
+        // Verificar que haya comandos en memoria
+        if (colaComandos.empty()){
+            std::cout << "La informacion requerida no esta almacenada en memoria.\n";
+            return;
+        }
+
+        std::ofstream archivo(nombreArchivo);
+        if (!archivo.is_open()){
+            std::cout << "Error guardando en " << nombreArchivo << ".\n";
+            return;
+        }
+
+        // Copiar la cola para no destruirla al recorrerla
+        std::queue<Comando> copia = colaComandos;
+        while (!copia.empty()){
+            Comando c = copia.front();
+            copia.pop();
+
+            if (c.getTipoComando() == "movimiento"){
+                archivo << c.getTipoMovimiento() << " " << c.getMagnitud() << " " << c.getUnidadMovimiento() << "\n";
+            } else if (c.getTipoComando() == "analisis"){
+                archivo << c.getTipoAnalisis() << " "<< c.getObjeto();
+                
+                if (c.getComentario() != ""){
+                    archivo << ' "' << c.getComentario() << '"';
+                }
+                archivo << "\n";
+            }
+        }
+
+        archivo.close();
+        std::cout << "La informacion ha sido guardada en " << nombreArchivo << ".\n";
+
+    } else if (tipoArchivo == "elementos"){
+        // Verificar que haya elementos en memoria
+        if (listaElementos.empty()){
+            std::cout << "La informacion requerida no esta almacenada en memoria.\n";
+            return;
+        }
+
+        std::ofstream archivo(nombreArchivo);
+        if (!archivo.is_open()){
+            std::cout << "Error guardando en " << nombreArchivo << ".\n";
+            return;
+        }
+
+        for (int i = 0; i < listaElementos.size(); i++){
+            Elemento e = listaElementos[i];
+            archivo << e.getTipoElemento() << " "
+                    << e.getTamano() << " "
+                    << e.getUnidadMedida() << " "
+                    << e.getPosX() << " "
+                    << e.getPosY() << "\n";
+        }
+
+        archivo.close();
+        std::cout << "La informacion ha sido guardada en " << nombreArchivo << ".\n";
+
+    } else {
+        std::cout << "Tipo de archivo invalido. Use 'comandos' o 'elementos'.\n";
+    }
 }
 
 //Simular comandos cargados con cordenadas
