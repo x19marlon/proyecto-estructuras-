@@ -4,6 +4,11 @@
 #include <fstream>
 #include <sstream>
 
+// firmas de funciones auxiliares
+bool esMovimientoValido(std::string tipo, double magnitud, std::string unidad);
+bool esAnalisisValido(std::string tipo, std::string objeto);
+bool esElementoValido(std::string tipo, double tam, std::string unidad, double x, double y, std::istringstream& ss);
+
 //Constructor
 SistemaCuriosity::SistemaCuriosity() : colaComandos(), listaElementos() {
 
@@ -60,16 +65,28 @@ void SistemaCuriosity::cargarComandos(std::string nombreArchivo){
 
             ss >> magnitud >> unidad;
 
+            //ignorar linea si no cumple el formato
+            if (!esMovimientoValido(tipo, magnitud, unidad)){
+                std::cout << "Linea ignorada por formato invalido: " << linea << "\n";
+                continue;
+            }
+
             Comando nuevo(tipo, magnitud, unidad);
             colaComandos.push(nuevo);
 
             contador++;
 
             //para comando de analisis
-        } else if (tipo == "fotografiar" || tipo == "composicion" || tipo == "performar") {
+        } else if (tipo == "fotografiar" || tipo == "composicion" || tipo == "perforar") {
             // Un comando de analisis: tipo objeto comentario 
             std::string objeto;
             ss >> objeto;
+
+            //ignorar linea si no cumple el formato
+            if (!esAnalisisValido(tipo, objeto)){
+                std::cout << "Linea ignorada por formato invalido: " << linea << "\n";
+                continue;
+            }
 
             // Buscar comentario entre comillas "______"
             std::string comentario = "";
@@ -89,6 +106,11 @@ void SistemaCuriosity::cargarComandos(std::string nombreArchivo){
             colaComandos.push(nuevo);
 
             contador++;
+
+        } else {
+            //si es otro tipo
+            std::cout << "Linea ignorada, tipo desconocido: " << linea << "\n";
+            continue;
         }
     }
 
@@ -130,6 +152,11 @@ void SistemaCuriosity::cargarElementos(std::string nombreArchivo){
         
         ss >> tipo >> tam >> unidad >> x >> y;
         
+        if (!esElementoValido(tipo, tam, unidad, x, y, ss)){
+            std::cout << "Linea ignorada por formato invalido: " << linea << "\n";
+            continue;
+        }
+
         Elemento nuevo(tipo, tam, unidad, x, y);
         listaElementos.push_back(nuevo);
         contador++;
@@ -174,4 +201,38 @@ void SistemaCuriosity::guardar(std::string tipoArchivo, std::string nombreArchiv
 //Simular comandos cargados con cordenadas
 void SistemaCuriosity::simularComandos(double coordX, double coordY){
 
+}
+
+
+// Funciones auxiliares
+// Validar un comando de movimiento
+bool esMovimientoValido(std::string tipo, double magnitud, std::string unidad){
+    if (tipo != "avanzar" && tipo != "girar") return false;
+
+    if (tipo == "avanzar"){
+        if (unidad != "cm" && unidad != "dm" && unidad != "m" && unidad != "km") return false;
+    }
+    else if (tipo == "girar"){
+        if (unidad != "grd" && unidad != "rad") return false;
+    }
+    return true;
+}
+
+// Validar un comando de analisis
+bool esAnalisisValido(std::string tipo, std::string objeto){
+    if (tipo != "fotografiar" && tipo != "composicion" && tipo != "perforar") return false;
+
+    if (objeto.empty()) return false;
+    return true;
+}
+
+//Validar comando de elemento
+bool esElementoValido(std::string tipo, double tam, std::string unidad, double x, double y, std::istringstream& ss){
+    // Verificar tipo
+    if (tipo != "roca" && tipo != "crater" && tipo != "monticulo" && tipo != "duna") return false;
+    // Verificar unidad
+    if (unidad != "cm" && unidad != "dm" && unidad != "m" && unidad != "km") return false;
+    // Verificar que el stream no haya fallado (tam, x, y son numeros validos)
+    if (ss.fail()) return false;
+    return true;
 }
