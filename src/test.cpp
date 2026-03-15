@@ -43,15 +43,26 @@ do{
     std::vector<std::string> palabras;
     palabras.clear();
     linea = new char[300];
-    std::cout<<celeste<<usuario<<yellow<<" $:";
+    std::cout<<celeste<<usuario<<yellow<<" $";
     std::cin.getline(linea,300);
 
     //llamar a cadena de palabras
 
     separarPalabras(palabras,linea);
+    if(palabras[0]=="salir")doing=false;
+    //ayuda
+    if (palabras[0] == "ayuda"){
+        if (palabras.size() >= 2){
+            ayuda(palabras[1]);
+        } else{
+            ayuda("");
+        }
+        }
+
+
+
     if(palabras.size()>1){
     int opcion=obtenerComando(palabras[0]);
-    std::string nombreArchivo = palabras[2];
     double coordX, coordY;
 
     //llamar a cade
@@ -59,24 +70,26 @@ do{
     switch (opcion) {
         
         // cargar comandos
-        case 1:
+        case 1:{
+        std::string nombreArchivo = palabras[1];
         curiosity.cargarComandos(nombreArchivo);
-        break;
+        break;}
         //cargar elementos
-        case 2:
+        case 2:{
+        std::string nombreArchivo = palabras[1];
         curiosity.cargarElementos(nombreArchivo);
-        break;
+        break;}
         //agregar_movimiento
         case 3:
-        agregarMovimiento(curiosity, argv);
+        agregarMovimiento(curiosity, palabras);
         break;   
         // agregar analisis
         case 4:
-        agregarAnalisis(curiosity, argv, argc);
+        agregarAnalisis(curiosity, palabras, palabras.size()-1);
         // agregar elemento
         break;
         case 5:
-        agregarElemento(curiosity, argv);
+        agregarElemento(curiosity, palabras);
         break;
         //guardar 
         case 6:{
@@ -90,22 +103,20 @@ do{
         coordY=obtenerCoordenadas(palabras[2]);
         curiosity.simularComandos(coordX, coordY);
         break;
+        case 0:
+        default:
+            std::cout << "No se reconoce el comando<"<<palabras[0]<<">\n";
+        break;
     }
     }
-    else  std::cout<<"Ingrese un argumento, utilice el comando ayuda"<<std::endl;
-    //ayuda
-    if (palabras[0] == "ayuda"){
-        if (palabras.size() >= 2){
-            ayuda(palabras[1]);
-        } else{
-            ayuda("");
-        }
-    }
+    
 
     //salir
-     if (palabras[0] == "salir"){
+    else if (palabras[0] == "salir"){
        doing =false;
     }
+    else if(palabras.empty()) std::cout<<"Ingrese un argumento válido, utilice el comando ayuda"<<std::endl;
+delete [] linea;
 }while(doing);
 
                                                                                                 
@@ -133,10 +144,10 @@ int obtenerComando(std::string comando){
     if(comando=="cargar_elementos")  return 2;
     if(comando=="agregar_movimiento")return 3;
     if(comando=="agregar_analisis")  return 4;
-    if(comando=="agregar_elementos") return 5;
+    if(comando=="agregar_elemento")  return 5;
     if(comando=="guardar")           return 6;
     if(comando=="simular_comandos")  return 7;
-
+    if (comando=="ayuda")            return -1;
     return 0;
 }
 
