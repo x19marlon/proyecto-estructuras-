@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 #include <cmath>
 
 // firmas de funciones auxiliares
@@ -253,7 +254,7 @@ void SistemaCuriosity::guardar(std::string tipoArchivo, std::string nombreArchiv
             return;
         }
 
-        for (int i = 0; i < listaElementos.size(); i++){
+        for (auto i = 0; i < listaElementos.size(); i++){
             Elemento e = listaElementos[i];
             archivo << e.getTipoElemento() << " " << e.getTamano() << " " << e.getUnidadMedida() << " " << e.getPosX() << " " << e.getPosY() << "\n";
         }
@@ -268,43 +269,54 @@ void SistemaCuriosity::guardar(std::string tipoArchivo, std::string nombreArchiv
 
 //Simular comandos cargados con cordenadas
 void SistemaCuriosity::simularComandos(double coordX, double coordY){
-    
-    //Si no hay comandos en memoria
+
     if (colaComandos.empty()){
         std::cout << "La informacion requerida no esta almacenada en memoria.\n";
         return;
     }
 
-    //guardar cordenadas
     double x = coordX;
     double y = coordY;
+    double angulo = 0.0;
 
-    double angulo = 0.0; // radianes, empieza mirando hacia la derecha
-
-    // Copiar la cola para no destruirla
     std::queue<Comando> copia = colaComandos;
 
     while (!copia.empty()){
+
         Comando c = copia.front();
         copia.pop();
 
-        // Solo procesar movimientos
-        if (c.getTipoComando() != "movimiento") continue;
+        if (c.getTipoComando() != "movimiento") 
+            continue;
 
         std::string tipo = c.getTipoMovimiento();
 
         if (tipo == "avanzar"){
-            double distancia = convertirAMetros(c.getMagnitud(), c.getUnidadMovimiento());
-            x += distancia * cos(angulo);
-            y += distancia * sin(angulo);
-        } else if (tipo == "girar"){
-            double giro = convertirARadianes(c.getMagnitud(), c.getUnidadMovimiento());
-            angulo += giro; // positivo = antihorario, negativo = horario
+
+            double distancia = convertirAMetros(
+                c.getMagnitud(),
+                c.getUnidadMovimiento()
+            );
+            x += distancia * std::cos(angulo);
+            y += distancia * std::sin(angulo);
+
+        } 
+        else if (tipo == "girar"){
+
+            double giro = convertirARadianes(
+                c.getMagnitud(),
+                c.getUnidadMovimiento()
+            );
+
+            angulo += giro;
         }
     }
 
-    std::cout << "La simulacion de los comandos, a partir de la posicion (" << coordX << "," << coordY << "), deja al robot en la nueva posicion (" << x << "," << y << ").\n";
-}
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "La simulacion de los comandos, a partir de la posicion ("
+          << coordX << "," << coordY 
+          << "), deja al robot en la nueva posicion ("
+          << x << "," << y << ").\n";}
 
 
 // Funciones auxiliares
