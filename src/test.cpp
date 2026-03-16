@@ -49,6 +49,7 @@ do{
     //llamar a cadena de palabras
 
     separarPalabras(palabras,linea);
+
     if(palabras[0]=="salir")doing=false;
     //ayuda
     if (palabras[0] == "ayuda"){
@@ -58,8 +59,9 @@ do{
             ayuda("");
         }
         }
+    if(palabras[0]!="ayuda" || palabras[0]!="salida")std::cout<<"Ingrese un argumento válido, utilice el comando ayuda"<<std::endl;
 
-
+    
 
     if(palabras.size()>1){
     int opcion=obtenerComando(palabras[0]);
@@ -110,12 +112,6 @@ do{
     }
     }
     
-
-    //salir
-    else if (palabras[0] == "salir"){
-       doing =false;
-    }
-    else if(palabras.empty()) std::cout<<"Ingrese un argumento válido, utilice el comando ayuda"<<std::endl;
 delete [] linea;
 }while(doing);
 
