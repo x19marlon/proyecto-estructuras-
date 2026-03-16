@@ -34,12 +34,12 @@ std::cout<<" ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄�
                                         
                                         
                      
-                                                                                                                                                       
+                SistemaCuriosity curiosity;
+                                                                                                                                       
 char* linea;                                                                        
 bool doing=true;
 do{
     
-    SistemaCuriosity curiosity;
     std::vector<std::string> palabras;
     palabras.clear();
     linea = new char[300];
@@ -59,9 +59,12 @@ do{
             ayuda("");
         }
         }
-    if(palabras[0]!="ayuda" || palabras[0]!="salida")std::cout<<"Ingrese un argumento válido, utilice el comando ayuda"<<std::endl;
-
-    
+    if (palabras.size()<2) {
+            if(palabras[0]!="ayuda" && palabras[0]!="salir"){
+            std::cout<<"Ingrese un argumento válido, utilice el comando ayuda"<<std::endl;
+            }  
+        }
+      
 
     if(palabras.size()>1){
     int opcion=obtenerComando(palabras[0]);
@@ -95,8 +98,8 @@ do{
         break;
         //guardar 
         case 6:{
-        std::string tipoArchivo = argv[1];
-        std::string nombreArchivo = argv[2];
+        std::string tipoArchivo = palabras[1];
+        std::string nombreArchivo = palabras[2];
         curiosity.guardar(tipoArchivo, nombreArchivo);
         //simular comandos
         break;}
@@ -106,8 +109,7 @@ do{
         curiosity.simularComandos(coordX, coordY);
         break;
         case 0:
-        default:
-            std::cout << "No se reconoce el comando<"<<palabras[0]<<">\n";
+            std::cout << "No se reconoce el comando< "<<palabras[0]<<">\n";
         break;
     }
     }

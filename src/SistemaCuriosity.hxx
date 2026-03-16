@@ -45,7 +45,7 @@ void SistemaCuriosity::cargarComandos(std::string nombreArchivo){
 
     //Archivo no encontrado
     if (!archivo.is_open()){
-        std::cout<< nombreArchivo << "no se encuentra o no puede leerse.\n";
+        std::cout<< nombreArchivo << " no se encuentra o no puede leerse.\n";
         return;
     }
 

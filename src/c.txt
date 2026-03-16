@@ -1,0 +1,3 @@
+avanzar 10 dm
+girar 5 grd
+avanzar 3 km
