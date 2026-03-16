@@ -183,3 +183,39 @@ void agregarElemento(SistemaCuriosity& curiosity, std::vector<std::string> argv)
     }
     curiosity.agregarElemento(tipoComp, tam, unidad, posX, posY);
 }
+
+void separarPalabras(std::vector<std::string>  &palabras, char * linea){
+    
+    std::stringstream ss(linea);
+    std::string palabra;
+
+    while (ss >> palabra) {
+        palabras.push_back(palabra);
+    }
+}
+
+int obtenerComando(std::string comando){
+
+   
+    //     std::cout << "No se reconoce el comando"<<arg<<"\n";
+    //     return 1;
+    if(comando=="cargar_comandos")   return 1;
+    if(comando=="cargar_elementos")  return 2;
+    if(comando=="agregar_movimiento")return 3;
+    if(comando=="agregar_analisis")  return 4;
+    if(comando=="agregar_elemento")  return 5;
+    if(comando=="guardar")           return 6;
+    if(comando=="simular_comandos")  return 7;
+    if (comando=="ayuda")            return -1;
+    return 0;
+}
+
+double obtenerCoordenadas(std::string cord){
+    double coordenada;
+    try { //string to double, usar try y catch para evitar errores por el tipo de dato
+           coordenada=std::stod(cord);
+        } catch (const std::invalid_argument& e) {
+            std::cout<<"Las coordenadas deben ser numeros validos.\n";
+        }
+    return coordenada;
+}
